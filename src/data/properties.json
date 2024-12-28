@@ -1,0 +1,171 @@
+{
+	"properties": [
+        {
+            "id":"prop1",
+			"type":"House",
+            "bedrooms":3,
+			"price":750000,
+			"tenure":"Freehold",
+			"description":"Attractive three bedroom semi-detached family home situated within 0.5 miles of Petts Wood station with fast trains to London and within easy walking distance of local shops, schools, bus routes and National Trust woodland. The property comprises; two receptions, fitted 18'9 x 10'1 kitchen/breakfast room and conservatory. The property also benefits from having a utility room and cloakroom. To the first floor there are three bedrooms and a family bathroom with separate WC. Additional features include double glazing, gas central heating and a well presented interior...",
+			"location":"Petts Wood Road, Petts Wood, Orpington BR5",
+            "picture": "/images/prop1/prop1.1.jpeg",
+            "images": [
+                "/images/prop1/prop1.1.jpeg",
+                "/images/prop1/prop1.2.jpeg",
+                "/images/prop1/prop1.3.jpeg",
+                "/images/prop1/prop1.4.jpeg",
+                "/images/prop1/prop1.5.jpeg",
+                "/images/prop1/prop1.6.jpg"
+
+            ],
+			"url":"properties/prop1.html",
+            "added": {
+                "month":"October",
+                "day":12,
+                "year":2022
+            }
+        },
+		{
+            "id":"prop2",
+			"type":"Flat",
+            "bedrooms":2,
+			"price":399995,
+			"tenure":"Freehold",
+			"description":"Presented in excellent decorative order throughout is this two double bedroom, two bathroom, garden flat. <br>The modern fitted kitchen is open plan to the living room which boasts solid wooden floors and includes integrated appliances including a dishwasher & a washing machine. This large open plan benefits from bi folding doors onto a secluded private courtyard garden. Both bedrooms are double sized, and the family bathroom boasts a matching three piece suite a shower attachment over the bath. There is also a separate wet room. There are walnut doors throughout and wiring for Sky TV/aerial points in the living room/kitchen and both bedrooms.<br>This apartment being only five years old, is still under a 10 year building guarantee...",
+			"location":"Crofton Road Orpington BR6",
+			"picture": "/images/prop2/prop2.1.png",
+            "images": [
+                "/images/prop2/prop2.1.png",
+                "/images/prop2/prop2.2.png",
+                "/images/prop2/prop2.3.png",
+                "/images/prop2/prop2.4.png",
+                "/images/prop2/prop2.5.png",
+                "/images/prop2/prop2.6.png"
+
+            ],
+			"url":"properties/prop2.html",
+            "added": {
+                "month":"September",
+                "day":14,
+                "year":2022
+            }
+        },
+        {
+            "id": "prop3",
+            "type": "House",
+            "bedrooms": 4,
+            "price": 850000,
+            "tenure": "Leasehold",
+            "description": "A spacious and well-maintained four-bedroom detached house located within a sought-after cul-de-sac in Orpington. Features include an open-plan living and dining area, a modern kitchen with integrated appliances, and a landscaped rear garden with a patio. Upstairs, there are four double bedrooms, including a master with an en-suite, and a family bathroom.",
+            "location": "Chislehurst Road, Orpington BR6",
+            "picture": "/images/prop3/prop3.1.png",
+            "images": [
+                "/images/prop3/prop3.1.png",
+                "/images/prop3/prop3.2.png",
+                "/images/prop3/prop3.3.png",
+                "/images/prop3/prop3.4.png",
+                "/images/prop3/prop3.5.png",
+                "/images/prop3/prop3.6.png"
+            ],
+            "url": "properties/prop3.html",
+            "added": {
+                "month": "July",
+                "day": 20,
+                "year": 2022
+            }
+        },
+        {
+            "id": "prop4",
+            "type": "Flat",
+            "bedrooms": 1,
+            "price": 275000,
+            "tenure": "Leasehold",
+            "description": "A charming one-bedroom apartment in the heart of Orpington. Perfect for first-time buyers or investors, this property features a bright living room, a modern fitted kitchen, a spacious double bedroom, and a contemporary bathroom. Additional benefits include allocated parking and easy access to local amenities and transport links.",
+            "location": "High Street, Orpington BR6",
+            "picture":"/images/prop4/prop4.1.png",
+            "images": [
+                "/images/prop4/prop4.1.png",
+                "/images/prop4/prop4.2.png",
+                "/images/prop4/prop4.3.png"
+            ],
+            "url": "properties/prop4.html",
+            "added": {
+                "month": "May",
+                "day": 15,
+                "year": 2022
+            }
+        },
+        {
+            "id": "prop5",
+            "type": "House",
+            "bedrooms": 5,
+            "price": 1200000,
+            "tenure": "Freehold",
+            "description": "An exceptional five-bedroom detached family home situated in a prestigious neighborhood. Boasting a generous garden, a triple garage, and an expansive kitchen/dining area with bi-fold doors leading to the patio. The ground floor includes a study, utility room, and a cloakroom, while upstairs offers a luxurious master suite, four additional bedrooms, and three bathrooms.",
+            "location": "Park Avenue, Orpington BR5",
+            "picture": "/images/prop5/prop5.1.png",
+            "images": [
+                "/images/prop5/prop5.1.png",
+                "/images/prop5/prop5.2.png",
+                "/images/prop5/prop5.3.png",
+                "/images/prop5/prop5.4.png",
+                "/images/prop5/prop5.5.png",
+                "/images/prop5/prop5.6.png",
+                "/images/prop5/prop5.7.png",
+                "/images/prop5/prop5.8.png"
+            ],
+            "url": "properties/prop5.html",
+            "added": {
+                "month": "August",
+                "day": 3,
+                "year": 2022
+            }
+        },
+        {
+            "id": "prop6",
+            "type": "Flat",
+            "bedrooms": 3,
+            "price": 525000,
+            "tenure": "Leasehold",
+            "description": "A beautifully presented three-bedroom apartment located close to transport links and schools. This property features a large open-plan living area with a balcony, a modern kitchen, and two bathrooms, including an en-suite to the master bedroom. Residents benefit from secured parking and communal gardens.",
+            "location": "Station Road, Orpington BR6",
+            "picture": "/images/prop6/prop6.1.png",
+            "images": [
+                "/images/prop6/prop6.1.png",
+                "/images/prop6/prop6.2.png",
+                "/images/prop6/prop6.3.png",
+                "/images/prop6/prop6.4.png",
+                "/images/prop6/prop6.5.png"
+            ],
+            "url": "properties/prop6.html",
+            "added": {
+                "month": "June",
+                "day": 10,
+                "year": 2022
+            }
+        },
+        {
+            "id": "prop7",
+            "type": "House",
+            "bedrooms": 2,
+            "price": 450000,
+            "tenure": "Freehold",
+            "description": "A delightful two-bedroom terraced house located within walking distance of Orpington High Street. This property offers a cozy living room, a contemporary kitchen, two double bedrooms, and a modern bathroom. The rear garden includes a decked area perfect for outdoor entertaining.",
+            "location": "Warren Road, Orpington BR6",
+            "picture": "/images/prop7/prop7.1.png",
+            "images": [
+                "/images/prop7/prop7.1.png",
+                "/images/prop7/prop7.2.png",
+                "/images/prop7/prop7.3.png",
+                "/images/prop7/prop7.4.png",
+                "/images/prop7/prop7.5.png",
+                "/images/prop7/prop7.6.png"
+            ],
+            "url": "properties/prop7.html",
+            "added": {
+                "month": "April",
+                "day": 22,
+                "year": 2022
+            }
+        }
+]}
