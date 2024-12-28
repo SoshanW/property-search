@@ -1,23 +1,39 @@
-import { Draggable } from '@hello-pangea/dnd';
-import { Card } from '@mui/material';
+// Importing necessary react and Materual-UI components
 import React from 'react';
+import { Card, CardContent, CardActions, Typography, IconButton, Box, Chip } from '@mui/material';
 
+// Importing drag and drop components from the DND library
+import { Draggable } from '@hello-pangea/dnd';
+
+// Importing icons from Material-UI
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import BedIcon from '@mui/icons-material/Bed';
+import HomeIcon from '@mui/icons-material/Home';
+import { Link } from 'react-router-dom';
+
+// PropertyCard component with destructed props
 const PropertyCard = ({ 
-  property,
-  index,
-  onFavourite,
-  isFavourite,
-  showFavourite = true,
+  property, //Property data object 
+  index,  //Index of the property in the list
+  onFavorite,   //Function to handle favorite property
+  isFavorite,   //Boolean value to check if the property is favorite
+  showFavoriteIcon = true   //Boolean value to show favorite icon
 }) => {
+  
   return(
+    // Draggable components for drag and drop funcitonality
     <Draggable draggableId={property.id} index={index}>
       {(provided, snapshot) => (
+
+        // Material-UI Card with custome styling and drag props
         <Card
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           className="property-card"
           sx={{
+            //Hover and transition effects
             position: 'relative',
             transition: 'all 0.3s ease-in-out',
             '&:hover': {
@@ -52,6 +68,8 @@ const PropertyCard = ({
                   objectFit: 'cover',
                   transition: 'transform 0.3s ease-in-out',
                 }}
+
+                //Image zoom on hover
                 onMouseOver={(e) => {
                   e.currentTarget.style.transform = 'scale(1.05)';
                 }}
@@ -59,6 +77,7 @@ const PropertyCard = ({
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               />
+              
               <Box
                 sx={{
                   position: 'absolute',
