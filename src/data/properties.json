@@ -167,5 +167,56 @@
                 "day": 22,
                 "year": 2022
             }
+        },
+
+        {
+            "id": "prop8",
+            "type": "House",
+            "bedrooms": 6,
+            "price": 1500000,
+            "tenure": "Freehold",
+            "description": "A stunning six-bedroom detached house nestled in an exclusive gated community. This luxurious property features an expansive open-plan kitchen/dining area with high-end appliances, a home cinema, a gym, and a beautifully landscaped garden with a heated swimming pool. The master suite includes a private balcony, walk-in wardrobe, and en-suite bathroom. Perfect for modern family living, this home also offers ample parking and a double garage.",
+            "location": "Lakeside Drive, Orpington BR5",
+            "picture": "/images/prop8/prop8.1.png",
+            "images": [
+                "/images/prop8/prop8.1.png",
+                "/images/prop8/prop8.2.png",
+                "/images/prop8/prop8.3.png",
+                "/images/prop8/prop8.4.png",
+                "/images/prop8/prop8.5.png",
+                "/images/prop8/prop8.6.png",
+                "/images/prop8/prop8.7.png",
+                "/images/prop8/prop8.8.png"
+            ],
+            "url": "properties/prop8.html",
+            "added": {
+                "month": "November",
+                "day": 5,
+                "year": 2022
+            }
+        },
+        {
+            "id": "prop9",
+            "type": "Flat",
+            "bedrooms": 2,
+            "price": 325000,
+            "tenure": "Leasehold",
+            "description": "An inviting two-bedroom apartment in a sought-after modern development. The property features a spacious living room with a Juliet balcony, a fully fitted kitchen with integrated appliances, and two double bedrooms, including a master with en-suite facilities. Additional benefits include secure entry, allocated parking, and access to communal gardens. Ideal for first-time buyers or as an investment property.",
+            "location": "Queens Court, Orpington BR6",
+            "picture": "/images/prop9/prop9.1.png",
+            "images": [
+                "/images/prop9/prop9.1.png",
+                "/images/prop9/prop9.2.png",
+                "/images/prop9/prop9.3.png",
+                "/images/prop9/prop9.4.png",
+                "/images/prop9/prop9.5.png"
+            ],
+            "url": "properties/prop9.html",
+            "added": {
+                "month": "October",
+                "day": 25,
+                "year": 2022
+            }
         }
+        
 ]}
