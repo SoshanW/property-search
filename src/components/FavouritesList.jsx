@@ -5,10 +5,12 @@ import { Droppable } from '@hello-pangea/dnd';
 import { useNavigate } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
+// FavoritesList component definition
 const FavoritesList = ({ favorites, onRemove, onClear }) => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width:768px)');
 
+  // Function to handle property click and navigate to property details
   const handlePropertyClick = (propertyId) => {
     navigate(`/property/${propertyId}`);
   };
@@ -49,11 +51,12 @@ const FavoritesList = ({ favorites, onRemove, onClear }) => {
         )}
       </Typography>
       
-      <Droppable droppableId="favoritesList">
+      <Droppable droppableId="favoritesList"> 
+        {/* Droppable area for drag-and-drop */}
         {(provided, snapshot) => (
           <List
-            {...provided.droppableProps}
-            ref={provided.innerRef}
+            {...provided.droppableProps}  // Props for droppable functionality
+            ref={provided.innerRef}   // Reference for the droppable area
             sx={{
               minHeight: isMobile ? 'auto' : 100,
               backgroundColor: snapshot.isDraggingOver ? 
@@ -65,16 +68,16 @@ const FavoritesList = ({ favorites, onRemove, onClear }) => {
               overflowY: 'auto'
             }}
           >
-            {favorites.length === 0 ? (
+            {favorites.length === 0 ? ( // Check if there are no favorites
               <ListItem sx={{ justifyContent: 'center', py: 4 }}>
                 <Typography color="text.secondary">
                   No favorites yet. Drag properties here or click the heart icon to add.
                 </Typography>
               </ListItem>
             ) : (
-              favorites.map((property, index) => (
+              favorites.map((property, index) => ( // Map through favorites to display each property
                 <ListItem 
-                  key={property.id}
+                  key={property.id} // Unique key for each list item
                   sx={{
                     borderBottom: '1px solid',
                     borderColor: 'divider',
@@ -93,7 +96,7 @@ const FavoritesList = ({ favorites, onRemove, onClear }) => {
                   }}
                 >
                   <Box 
-                    onClick={() => handlePropertyClick(property.id)}
+                    onClick={() => handlePropertyClick(property.id)} // Navigate to property details on click
                     sx={{ 
                       flex: 1,
                       mr: 1,
@@ -110,7 +113,7 @@ const FavoritesList = ({ favorites, onRemove, onClear }) => {
                         fontSize: isMobile ? '1rem' : 'inherit'
                       }}
                     >
-                      {property.type} - {property.bedrooms} bed
+                      {property.type} - {property.bedrooms} bed {/* Display property type and bedrooms */}
                     </Typography>
                     <Typography 
                       variant="body2" 
@@ -123,16 +126,16 @@ const FavoritesList = ({ favorites, onRemove, onClear }) => {
                         flexWrap: isMobile ? 'wrap' : 'nowrap'
                       }}
                     >
-                      <span>{property.location}</span>
+                      <span>{property.location}</span> {/* Display property location */}
                       <span style={{ fontWeight: 500, whiteSpace: 'nowrap' }}>
-                        £{property.price.toLocaleString()}
+                        £{property.price.toLocaleString()} {/* Display property price */}
                       </span>
                     </Typography>
                   </Box>
                   <IconButton 
                     onClick={(e) => {
-                      e.stopPropagation();
-                      onRemove(property.id);
+                      e.stopPropagation();  // Prevent click from bubbling up
+                      onRemove(property.id); // Call onRemove function to remove property
                     }}
                     size="small"
                     sx={{
@@ -147,7 +150,7 @@ const FavoritesList = ({ favorites, onRemove, onClear }) => {
                 </ListItem>
               ))
             )}
-            {provided.placeholder}
+            {provided.placeholder} {/* Placeholder for drag-and-drop functionality */}
           </List>
         )}
       </Droppable>

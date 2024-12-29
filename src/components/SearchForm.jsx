@@ -31,13 +31,16 @@ import {
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
+// SearchForm component definition
 const SearchForm = ({ onSearch, properties }) => {
   // Extract unique locations from properties
   const locations = useMemo(() => {
-    const uniqueLocations = [...new Set(properties.map(prop => prop.location))];
-    return uniqueLocations.sort();
-  }, [properties]);
+    const uniqueLocations = [...new Set(properties.map(prop => prop.location))]; // Get unique locations
+    return uniqueLocations.sort(); // Sort locations alphabetically
+  }, [properties]); // Recalculate when properties change
 
+
+  // State for search criteria
   const [criteria, setCriteria] = useState({
     type: '',
     minPrice: 100000,
@@ -78,10 +81,10 @@ const SearchForm = ({ onSearch, properties }) => {
     
     // Ensure min price doesn't exceed max price and vice versa
     if (name === 'minPrice' && numericValue > criteria.maxPrice) {
-      return;
+      return; // Prevent setting minPrice higher than maxPrice
     }
     if (name === 'maxPrice' && numericValue < criteria.minPrice) {
-      return;
+      return; // Prevent setting maxPrice lower than minPrice
     }
 
     const newCriteria = { ...criteria, [name]: numericValue || 0 };
@@ -107,6 +110,7 @@ const SearchForm = ({ onSearch, properties }) => {
     updateActiveFilters(newCriteria);
   };
 
+  // Handle slider changes for price and bedrooms
   const handleSliderChange = (name) => (event, newValue) => {
     const newCriteria = {
       ...criteria,
@@ -117,17 +121,20 @@ const SearchForm = ({ onSearch, properties }) => {
     updateActiveFilters(newCriteria);
   };
 
+  // Handle date changes for date range
   const handleDateChange = (date, field) => {
     const newCriteria = { ...criteria, [field]: date };
     setCriteria(newCriteria);
     updateActiveFilters(newCriteria);
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     onSearch(criteria);
   };
 
+  // Handle reset of the form
   const handleReset = () => {
     const defaultCriteria = {
       type: '',
@@ -187,7 +194,7 @@ const SearchForm = ({ onSearch, properties }) => {
               <Select
                 name="type"
                 value={criteria.type}
-                onChange={handleChange}
+                onChange={handleChange} // Handle change for location
                 label="Property Type"
                 startAdornment={<HomeIcon sx={{ mr: 1, ml: -0.5 }} />}
               >

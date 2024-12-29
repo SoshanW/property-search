@@ -3,9 +3,11 @@ import { Grid, Paper } from '@mui/material';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
 import PropertyCard from './PropertyCard';
 
+// PropertyList component definition
 const PropertyList = ({ properties, favorites, onFavorite }) => {
   return (
-    <Droppable droppableId="propertyList">
+    <Droppable droppableId="propertyList"> 
+    {/* Droppable area for drag-and-drop functionality */}
       {(provided, snapshot) => (
         <Grid
           container
@@ -21,7 +23,7 @@ const PropertyList = ({ properties, favorites, onFavorite }) => {
             borderRadius: 1
           }}
         >
-          {properties.map((property, index) => (
+          {properties.map((property, index) => ( // Mapping through the properties array
             <Draggable 
               key={property.id} 
               draggableId={property.id} 
@@ -59,6 +61,7 @@ const PropertyList = ({ properties, favorites, onFavorite }) => {
             </Draggable>
           ))}
           {provided.placeholder}
+          {/* Placeholder for drag-and-drop functionality */}
         </Grid>
       )}
     </Droppable>

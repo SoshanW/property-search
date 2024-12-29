@@ -50,18 +50,18 @@ const ImageGallery = ({ images }) => {
 
   // Image navigation handlers
   const handleNext = (e) => {
-    e.stopPropagation();
-    setCurrentIndex((prev) => (prev + 1) % images.length);
+    e.stopPropagation(); // Prevent event bubbling
+    setCurrentIndex((prev) => (prev + 1) % images.length); // Move to the next image
   };
 
   const handlePrev = (e) => {
     e.stopPropagation();
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length); // Move to the previous image
   };
 
   const toggleFullscreen = (e) => {
     e.stopPropagation();
-    setIsFullscreen(!isFullscreen);
+    setIsFullscreen(!isFullscreen); // Toggle fullscreen state
   };
 
   return (
@@ -97,8 +97,8 @@ const ImageGallery = ({ images }) => {
         />
 
         {/* Navigation Arrows */}
-        <IconButton
-          onClick={handlePrev}
+        <IconButton 
+          onClick={handlePrev} // Click handler for previous image
           sx={{
             position: 'absolute',
             left: '16px',
@@ -263,11 +263,11 @@ const PropertyDetails = ({ properties }) => {
 
   // Google Maps handlers
   const onLoad = useCallback((map) => {
-    setMap(map);
+    setMap(map); // Set map instance on load
   }, []);
 
   const onUnmount = useCallback(() => {
-    setMap(null);
+    setMap(null); // Clear map instance on unmount
   }, []);
 
   // Handle case where property is not found
@@ -390,7 +390,7 @@ const PropertyDetails = ({ properties }) => {
                 '& br': { display: 'block', content: '""', mt: 2 }
               }}
             >
-              <div dangerouslySetInnerHTML={{ __html: property.description }} />
+              <div dangerouslySetInnerHTML={{ __html: property.description }} /> {/* Display property description */}
             </Typography>
 
             <Divider sx={{ my: 4 }} />
@@ -424,12 +424,13 @@ const PropertyDetails = ({ properties }) => {
                     {
                       featureType: 'all',
                       elementType: 'all',
-                      stylers: [{ saturation: -100 }]
+                      stylers: [{ saturation: -100 }] // Desaturate all features
                     }
                   ]
                 }}
               >
                 <Marker position={mapCenter} />
+                {/* Marker for the map center */}
               </GoogleMap>
             </Paper>
           </Box>

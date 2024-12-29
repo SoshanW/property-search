@@ -3,8 +3,9 @@ import { AppBar, Toolbar, Box, IconButton, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 
+// Header component definition
 const Header = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
 
   return (
     <AppBar 

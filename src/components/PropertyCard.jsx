@@ -46,8 +46,8 @@ const PropertyCard = ({
           }}
         >
           <Link 
-            to={`/property/${property.id}`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
+            to={`/property/${property.id}`} // Link to navigate to the property details page
+            style={{ textDecoration: 'none', color: 'inherit' }} // Remove default link styling
           >
             <Box
               sx={{
@@ -57,8 +57,8 @@ const PropertyCard = ({
               }}
             >
               <img
-                src={property.picture}
-                alt={property.location}
+                src={property.picture} // Property image URL
+                alt={property.location}  // Alt text for the image
                 style={{
                   position: 'absolute',
                   top: 0,
@@ -110,7 +110,7 @@ const PropertyCard = ({
               </Box>
             </Box>
           </Link>
-          <CardContent sx={{ pt: 2, pb: 1 }}>
+          <CardContent sx={{ pt: 2, pb: 1 }}> 
             <Typography 
               variant="h6" 
               sx={{ 
@@ -119,7 +119,7 @@ const PropertyCard = ({
                 fontSize: '1.5rem',
               }}
             >
-              £{property.price.toLocaleString()}
+              £{property.price.toLocaleString()} {/* Displaying property price formatted with commas */}
             </Typography>
 
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -148,7 +148,7 @@ const PropertyCard = ({
                 minHeight: '40px',
               }}
             >
-              {property.description.replace(/<br>/g, ' ')}
+              {property.description.replace(/<br>/g, ' ')} {/* // Displaying property description, replacing <br> with space */}
             </Typography>
           </CardContent>
 

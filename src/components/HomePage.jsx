@@ -21,14 +21,18 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
-const HomePage = () => {
-  const theme = useTheme();
-  const navigate = useNavigate();
 
+// HomePage component definition
+const HomePage = () => {
+  const theme = useTheme(); // Hook to access the current theme
+  const navigate = useNavigate(); // Hook for navigation
+
+  // Function to navigate to the search page
   const handleExplore = () => {
     navigate('/search');
   };
 
+  // Function to scroll smoothly to the features section
   const scrollToFeatures = () => {
     document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
   };
@@ -58,7 +62,8 @@ const HomePage = () => {
   ];
 
   return (
-    <Box sx={{ overflow: 'hidden' }}>
+    <Box sx={{ overflow: 'hidden' }}> {/* Main container for the HomePage */}
+      
       {/* Hero Section */}
       <Box
         sx={{
