@@ -33,18 +33,19 @@ const PropertyCard = ({
           {...provided.dragHandleProps}
           className="property-card"
           sx={{
-            //Hover and transition effects
             position: 'relative',
-            transition: 'all 0.3s ease-in-out',
+            transition: snapshot.isDragging ? 'none' : 'all 0.3s ease-in-out',
+            transform: snapshot.isDragging ? 'none !important' : 'none',
             '&:hover': {
-              transform: 'translateY(-4px)',
+              transform: snapshot.isDragging ? 'none' : 'translateY(-4px)',
               boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
             },
             borderRadius: '12px',
             overflow: 'hidden',
             bgcolor: 'background.paper',
-          }}
-        >
+            cursor: snapshot.isDragging ? 'grabbing' : 'grab'
+          }
+        }>
           <Link 
             to={`/property/${property.id}`} // Link to navigate to the property details page
             style={{ textDecoration: 'none', color: 'inherit' }} // Remove default link styling

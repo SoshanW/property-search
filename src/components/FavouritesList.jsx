@@ -1,16 +1,14 @@
 import React from 'react';
 import { List, ListItem, IconButton, Typography, Button, Paper, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Droppable } from '@hello-pangea/dnd';
+import { Droppable, Draggable } from '@hello-pangea/dnd';
 import { useNavigate } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-// FavoritesList component definition
 const FavoritesList = ({ favorites, onRemove, onClear }) => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width:768px)');
 
-  // Function to handle property click and navigate to property details
   const handlePropertyClick = (propertyId) => {
     navigate(`/property/${propertyId}`);
   };
@@ -51,12 +49,11 @@ const FavoritesList = ({ favorites, onRemove, onClear }) => {
         )}
       </Typography>
       
-      <Droppable droppableId="favoritesList"> 
-        {/* Droppable area for drag-and-drop */}
+      <Droppable droppableId="favoritesList" isDropDisabled={false}>
         {(provided, snapshot) => (
           <List
-            {...provided.droppableProps}  // Props for droppable functionality
-            ref={provided.innerRef}   // Reference for the droppable area
+            {...provided.droppableProps}
+            ref={provided.innerRef}
             sx={{
               minHeight: isMobile ? 'auto' : 100,
               backgroundColor: snapshot.isDraggingOver ? 
@@ -68,89 +65,100 @@ const FavoritesList = ({ favorites, onRemove, onClear }) => {
               overflowY: 'auto'
             }}
           >
-            {favorites.length === 0 ? ( // Check if there are no favorites
+            {favorites.length === 0 ? (
               <ListItem sx={{ justifyContent: 'center', py: 4 }}>
                 <Typography color="text.secondary">
                   No favorites yet. Drag properties here or click the heart icon to add.
                 </Typography>
               </ListItem>
             ) : (
-              favorites.map((property, index) => ( // Map through favorites to display each property
-                <ListItem 
-                  key={property.id} // Unique key for each list item
-                  sx={{
-                    borderBottom: '1px solid',
-                    borderColor: 'divider',
-                    '&:last-child': {
-                      borderBottom: 'none'
-                    },
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    p: 2,
-                    transition: 'all 0.2s ease',
-                    '&:hover': {
-                      backgroundColor: 'action.hover',
-                      cursor: 'pointer'
-                    }
-                  }}
+              favorites.map((property, index) => (
+                <Draggable 
+                  key={property.id} 
+                  draggableId={property.id} 
+                  index={index}
                 >
-                  <Box 
-                    onClick={() => handlePropertyClick(property.id)} // Navigate to property details on click
-                    sx={{ 
-                      flex: 1,
-                      mr: 1,
-                      '&:hover': {
-                        color: 'primary.main'
-                      }
-                    }}
-                  >
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        mb: 0.5,
-                        fontWeight: 500,
-                        fontSize: isMobile ? '1rem' : 'inherit'
-                      }}
-                    >
-                      {property.type} - {property.bedrooms} bed {/* Display property type and bedrooms */}
-                    </Typography>
-                    <Typography 
-                      variant="body2" 
-                      color="text.secondary"
-                      sx={{ 
+                  {(provided, snapshot) => (
+                    <ListItem 
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      sx={{
+                        borderBottom: '1px solid',
+                        borderColor: 'divider',
+                        '&:last-child': {
+                          borderBottom: 'none'
+                        },
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        gap: 2,
-                        flexWrap: isMobile ? 'wrap' : 'nowrap'
+                        p: 2,
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          backgroundColor: 'action.hover',
+                          cursor: 'pointer'
+                        },
+                        backgroundColor: snapshot.isDragging ? 'rgba(25, 118, 210, 0.08)' : 'transparent'
                       }}
                     >
-                      <span>{property.location}</span> {/* Display property location */}
-                      <span style={{ fontWeight: 500, whiteSpace: 'nowrap' }}>
-                        £{property.price.toLocaleString()} {/* Display property price */}
-                      </span>
-                    </Typography>
-                  </Box>
-                  <IconButton 
-                    onClick={(e) => {
-                      e.stopPropagation();  // Prevent click from bubbling up
-                      onRemove(property.id); // Call onRemove function to remove property
-                    }}
-                    size="small"
-                    sx={{
-                      ml: 1,
-                      '&:hover': {
-                        color: 'error.main'
-                      }
-                    }}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </ListItem>
+                      <Box 
+                        onClick={() => handlePropertyClick(property.id)}
+                        sx={{ 
+                          flex: 1,
+                          mr: 1,
+                          '&:hover': {
+                            color: 'primary.main'
+                          }
+                        }}
+                      >
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            mb: 0.5,
+                            fontWeight: 500,
+                            fontSize: isMobile ? '1rem' : 'inherit'
+                          }}
+                        >
+                          {property.type} - {property.bedrooms} bed
+                        </Typography>
+                        <Typography 
+                          variant="body2" 
+                          color="text.secondary"
+                          sx={{ 
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            gap: 2,
+                            flexWrap: isMobile ? 'wrap' : 'nowrap'
+                          }}
+                        >
+                          <span>{property.location}</span>
+                          <span style={{ fontWeight: 500, whiteSpace: 'nowrap' }}>
+                            £{property.price.toLocaleString()}
+                          </span>
+                        </Typography>
+                      </Box>
+                      <IconButton 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onRemove(property.id);
+                        }}
+                        size="small"
+                        sx={{
+                          ml: 1,
+                          '&:hover': {
+                            color: 'error.main'
+                          }
+                        }}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </ListItem>
+                  )}
+                </Draggable>
               ))
             )}
-            {provided.placeholder} {/* Placeholder for drag-and-drop functionality */}
+            {provided.placeholder}
           </List>
         )}
       </Droppable>

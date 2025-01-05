@@ -74,28 +74,35 @@ function App() {
   // Determine whether to show header (hide on property details page)
   const showHeader = !location.pathname.includes('/property/');
 
-  // Handle drag and drop functionality for favorites
   const handleDragEnd = (result) => {
     const { source, destination, draggableId } = result;
     
-    // Return if dropped outside a droppable area
-    if (!destination) return;
+    // Return if dropped outside a droppable area or dropped in the same place
+    if (!destination || 
+        (source.droppableId === destination.droppableId && 
+         source.index === destination.index)) {
+      return;
+    }
     
     // Find the property being dragged
     const property = properties.find(p => p.id === draggableId);
-    
+    if (!property) return;
+
     // Handle dropping into favorites list
     if (destination.droppableId === 'favoritesList' && 
-        !favorites.some(f => f.id === property.id)) {
-      setFavorites(prev => [...prev, property]);
-    } 
+        source.droppableId === 'propertyList') {
+      // Add to favorites if not already present
+      if (!favorites.some(f => f.id === property.id)) {
+        setFavorites(prev => [...prev, property]);
+      }
+    }
     // Handle removing from favorites list
-    else if (source.droppableId === 'favoritesList' && 
-             destination.droppableId === 'propertyList') {
+    else if (source.droppableId === 'favoritesList' &&  destination.droppableId === 'propertyList') {
+      // Remove from favorites
       setFavorites(prev => prev.filter(f => f.id !== property.id));
-    } 
+    }
   };
-
+  
   // Handle property search based on filter criteria
   const handleSearch = (criteria) => {
     const filteredProperties = properties.filter(property => {
