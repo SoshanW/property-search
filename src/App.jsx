@@ -10,6 +10,7 @@ import PropertyDetails from './components/PropertyDetails';
 import HomePage from './components/HomePage';
 import useLocalStorage from './hooks/useLocalStorage';
 import propertiesData from './data/properties';
+import Footer from './components/Footer';
 import { Box } from '@mui/material';
 
 // Define the libraries needed for Google Maps integration
@@ -80,7 +81,7 @@ function App() {
     // Return if dropped outside a droppable area or dropped in the same place
     if (!destination || 
         (source.droppableId === destination.droppableId && 
-         source.index === destination.index)) {
+        source.index === destination.index)) {
       return;
     }
     
@@ -198,6 +199,7 @@ function App() {
               element={<PropertyDetails properties={properties} />}
             />
           </Routes>
+          <Footer />
         </Box>
       </Box>
     </LoadScript>
