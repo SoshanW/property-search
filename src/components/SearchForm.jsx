@@ -36,7 +36,7 @@ const defaultCriteria = {
   minPrice: 100000,
   maxPrice: 1500000,
   minBedrooms: 1,
-  maxBedrooms: 5,
+  maxBedrooms: 6,
   dateAfter: null,
   dateBefore: null,
   location: ''
