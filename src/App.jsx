@@ -12,40 +12,94 @@ import useLocalStorage from './hooks/useLocalStorage';
 import propertiesData from './data/properties';
 import { Box } from '@mui/material';
 
-// Libraries for Google Maps
+// Define the libraries needed for Google Maps integration
 const libraries = ['places'];
 
 function App() { 
-  const [properties] = useState(propertiesData.properties); // State for properties data
-  const [favorites, setFavorites] = useLocalStorage('favorites', []); // State for favorites using local storage
-  const [searchResults, setSearchResults] = useState(properties); // State for search results
-  const location = useLocation();  // Hook to get the current location
+  // Initialize properties state with data from the properties JSON file
+  const [properties] = useState(propertiesData.properties);
   
-  // Hide header on property details page
-  const showHeader = !location.pathname.includes('/property/'); //Header should not be shown on property details page
+  // Initialize favorites state using custom localStorage hook
+  // This persists favorites between page refreshes
+  const [favorites, setFavorites] = useLocalStorage('favorites', []);
+  
+  // Initialize searchResults state with persisted filters
+  // This maintains filter state when navigating between pages
+  const [searchResults, setSearchResults] = useState(() => {
+    // Check if there are any saved search criteria in localStorage
+    const savedCriteria = localStorage.getItem('searchCriteria');
+    if (savedCriteria) {
+      // Parse the saved criteria from JSON
+      const criteria = JSON.parse(savedCriteria);
+      
+      // Filter properties based on saved criteria
+      return properties.filter(property => {
+        // Apply type filter
+        if (criteria.type && property.type !== criteria.type) return false;
+        
+        // Apply price range filters
+        if (criteria.minPrice && property.price < parseInt(criteria.minPrice)) return false;
+        if (criteria.maxPrice && property.price > parseInt(criteria.maxPrice)) return false;
+        
+        // Apply bedroom range filters
+        if (criteria.minBedrooms && property.bedrooms < parseInt(criteria.minBedrooms)) return false;
+        if (criteria.maxBedrooms && property.bedrooms > parseInt(criteria.maxBedrooms)) return false;
+        
+        // Apply location filter
+        if (criteria.location && property.location !== criteria.location) return false;
+        
+        // Apply date range filters if either date is set
+        if (criteria.dateAfter || criteria.dateBefore) {
+          // Convert property date string to Date object
+          const propertyDate = new Date(property.added.year, 
+            new Date(Date.parse(property.added.month + " 1, 2012")).getMonth(), 
+            property.added.day);
+          
+          // Check if property date is within the selected range
+          if (criteria.dateAfter && propertyDate < new Date(criteria.dateAfter)) return false;
+          if (criteria.dateBefore && propertyDate > new Date(criteria.dateBefore)) return false;
+        }
+        
+        // Include property if it passes all filters
+        return true;
+      });
+    }
+    // If no saved criteria, return all properties
+    return properties;
+  });
+  
+  // Get current location for routing purposes
+  const location = useLocation();
+  
+  // Determine whether to show header (hide on property details page)
+  const showHeader = !location.pathname.includes('/property/');
 
+  // Handle drag and drop functionality for favorites
   const handleDragEnd = (result) => {
     const { source, destination, draggableId } = result;
+    
+    // Return if dropped outside a droppable area
     if (!destination) return;
     
+    // Find the property being dragged
     const property = properties.find(p => p.id === draggableId);
     
-    // If the property is dropped in the favorites list and is not already a favorite
+    // Handle dropping into favorites list
     if (destination.droppableId === 'favoritesList' && 
         !favorites.some(f => f.id === property.id)) {
       setFavorites(prev => [...prev, property]);
     } 
-    // If the property is dragged out of favorites to the property list
-    else if (source.droppableId === 'favoritesList' && destination.droppableId === 'propertyList') {
-      setFavorites(prev => prev.filter(f => f.id !== property.id)); // Remove the property from favorites
+    // Handle removing from favorites list
+    else if (source.droppableId === 'favoritesList' && 
+             destination.droppableId === 'propertyList') {
+      setFavorites(prev => prev.filter(f => f.id !== property.id));
     } 
   };
 
-  // Handle search based on criteria
+  // Handle property search based on filter criteria
   const handleSearch = (criteria) => {
-    
-    // Filter properties based on search criteria
     const filteredProperties = properties.filter(property => {
+      // Apply the same filtering logic as in the initial state
       if (criteria.type && property.type !== criteria.type) return false;
       if (criteria.minPrice && property.price < parseInt(criteria.minPrice)) return false;
       if (criteria.maxPrice && property.price > parseInt(criteria.maxPrice)) return false;
@@ -53,7 +107,6 @@ function App() {
       if (criteria.maxBedrooms && property.bedrooms > parseInt(criteria.maxBedrooms)) return false;
       if (criteria.location && property.location !== criteria.location) return false;
       
-      // Handle date filtering
       if (criteria.dateAfter || criteria.dateBefore) {
         const propertyDate = new Date(property.added.year, 
           new Date(Date.parse(property.added.month + " 1, 2012")).getMonth(), 
@@ -63,38 +116,43 @@ function App() {
         if (criteria.dateBefore && propertyDate > new Date(criteria.dateBefore)) return false;
       }
       
-      return true; // Include property if it meets all criteria
+      return true;
     });
     
-    setSearchResults(filteredProperties);  // Update search results state
+    // Update the search results state
+    setSearchResults(filteredProperties);
   };
 
-
-  // Handle toggling of favorite status for a property
+  // Handle toggling property favorite status
   const handleFavoriteToggle = (property) => {
     setFavorites(prev => {
-      const exists = prev.some(f => f.id === property.id); // Check if property is already a favorite
+      // Check if property is already in favorites
+      const exists = prev.some(f => f.id === property.id);
+      // Remove if exists, add if doesn't exist
       return exists 
-        ? prev.filter(f => f.id !== property.id) // Remove from favorites if it exists
-        : [...prev, property]; // Add to favorites if it doesn't exist
+        ? prev.filter(f => f.id !== property.id)
+        : [...prev, property];
     });
   };
 
-  // Only show DragDropContext on search page
+  // Render search page content
   const renderContent = () => {
     if (location.pathname === '/search') {
       return (
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="search-page">
-            <SearchForm onSearch={handleSearch} properties={properties} />
+            <SearchForm 
+              onSearch={handleSearch} 
+              properties={properties}
+            />
             <div className="content-wrapper">
               <PropertyList 
-                properties={searchResults} // List of properties based on search results
-                favorites={favorites} // List of favorite properties
-                onFavorite={handleFavoriteToggle} // Function to toggle favorite status
+                properties={searchResults}
+                favorites={favorites}
+                onFavorite={handleFavoriteToggle}
               />
               <FavoritesList 
-                favorites={favorites} // List of favorite properties
+                favorites={favorites}
                 onRemove={(id) => setFavorites(prev => prev.filter(f => f.id !== id))}
                 onClear={() => setFavorites([])}
               />
@@ -103,26 +161,34 @@ function App() {
         </DragDropContext>
       );
     }
-    return null; // Return null if not on search page
+    return null;
   };
 
   return (
+    // Load Google Maps script with API key
     <LoadScript
       googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
       libraries={libraries}
       loadingElement={<div>Loading maps...</div>}
-      onError={(error) => console.error('Google Maps loading error:', error)}
-      failedElement={<div>Could not load Google Maps</div>}
     >
       <Box className="app">
+        {/* Conditionally render header */}
         {showHeader && <Header />}
+        
+        {/* Main content area */}
         <Box sx={{ minHeight: '100vh' }}>
+          {/* Route configuration */}
           <Routes>
-            <Route path="/" element={<HomePage />} /> {/* Route for home page */}
-            <Route path="/search" element={renderContent()} /> {/* Route for search page */}
+            {/* Home page route */}
+            <Route path="/" element={<HomePage />} />
+            
+            {/* Search page route */}
+            <Route path="/search" element={renderContent()} />
+            
+            {/* Property details route */}
             <Route 
               path="/property/:id" 
-              element={<PropertyDetails properties={properties} />} // Route for property details page
+              element={<PropertyDetails properties={properties} />}
             />
           </Routes>
         </Box>

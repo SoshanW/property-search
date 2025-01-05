@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   TextField, 
   Select, 
@@ -14,7 +14,6 @@ import {
   Grid, 
   Paper,
   Tooltip,
-  Zoom,
   Badge,
   InputAdornment
 } from '@mui/material';
@@ -31,37 +30,56 @@ import {
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
-// SearchForm component definition
+// Default criteria object
+const defaultCriteria = {
+  type: '',
+  minPrice: 100000,
+  maxPrice: 1500000,
+  minBedrooms: 1,
+  maxBedrooms: 5,
+  dateAfter: null,
+  dateBefore: null,
+  location: ''
+};
+
 const SearchForm = ({ onSearch, properties }) => {
   // Extract unique locations from properties
   const locations = useMemo(() => {
-    const uniqueLocations = [...new Set(properties.map(prop => prop.location))]; // Get unique locations
-    return uniqueLocations.sort(); // Sort locations alphabetically
-  }, [properties]); // Recalculate when properties change
+    const uniqueLocations = [...new Set(properties.map(prop => prop.location))];
+    return uniqueLocations.sort();
+  }, [properties]);
 
-
-  // State for search criteria
-  const [criteria, setCriteria] = useState({
-    type: '',
-    minPrice: 100000,
-    maxPrice: 1500000,
-    minBedrooms: 1,
-    maxBedrooms: 5,
-    dateAfter: null,
-    dateBefore: null,
-    location: '' // Changed from postcode to location
+  // Initialize criteria from localStorage or use default
+  const [criteria, setCriteria] = useState(() => {
+    const savedCriteria = localStorage.getItem('searchCriteria');
+    if (savedCriteria) {
+      const parsed = JSON.parse(savedCriteria);
+      // Convert date strings back to Date objects
+      return {
+        ...parsed,
+        dateAfter: parsed.dateAfter ? new Date(parsed.dateAfter) : null,
+        dateBefore: parsed.dateBefore ? new Date(parsed.dateBefore) : null
+      };
+    }
+    return defaultCriteria;
   });
 
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [activeFilters, setActiveFilters] = useState(0);
+
+  // Save criteria to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('searchCriteria', JSON.stringify(criteria));
+    updateActiveFilters(criteria);
+  }, [criteria]);
 
   // Count active filters
   const updateActiveFilters = (newCriteria) => {
     let count = 0;
     if (newCriteria.type) count++;
     if (newCriteria.location) count++;
-    if (newCriteria.minPrice !== 100000 || newCriteria.maxPrice !== 1500000) count++;
-    if (newCriteria.minBedrooms !== 1 || newCriteria.maxBedrooms !== 5) count++;
+    if (newCriteria.minPrice !== defaultCriteria.minPrice || newCriteria.maxPrice !== defaultCriteria.maxPrice) count++;
+    if (newCriteria.minBedrooms !== defaultCriteria.minBedrooms || newCriteria.maxBedrooms !== defaultCriteria.maxBedrooms) count++;
     if (newCriteria.dateAfter || newCriteria.dateBefore) count++;
     setActiveFilters(count);
   };
@@ -70,47 +88,30 @@ const SearchForm = ({ onSearch, properties }) => {
     const { name, value } = e.target;
     const newCriteria = { ...criteria, [name]: value };
     setCriteria(newCriteria);
-    updateActiveFilters(newCriteria);
   };
 
-  // Handle price input changes
   const handlePriceChange = (e) => {
     const { name, value } = e.target;
-    // Remove non-numeric characters and convert to number
     const numericValue = Number(value.replace(/[^0-9]/g, ''));
     
-    // Ensure min price doesn't exceed max price and vice versa
-    if (name === 'minPrice' && numericValue > criteria.maxPrice) {
-      return; // Prevent setting minPrice higher than maxPrice
-    }
-    if (name === 'maxPrice' && numericValue < criteria.minPrice) {
-      return; // Prevent setting maxPrice lower than minPrice
-    }
+    if (name === 'minPrice' && numericValue > criteria.maxPrice) return;
+    if (name === 'maxPrice' && numericValue < criteria.minPrice) return;
 
     const newCriteria = { ...criteria, [name]: numericValue || 0 };
     setCriteria(newCriteria);
-    updateActiveFilters(newCriteria);
   };
 
-  // Handle bedroom input changes
   const handleBedroomChange = (e) => {
     const { name, value } = e.target;
     const numericValue = Number(value);
     
-    // Ensure min bedrooms doesn't exceed max bedrooms and vice versa
-    if (name === 'minBedrooms' && numericValue > criteria.maxBedrooms) {
-      return;
-    }
-    if (name === 'maxBedrooms' && numericValue < criteria.minBedrooms) {
-      return;
-    }
+    if (name === 'minBedrooms' && numericValue > criteria.maxBedrooms) return;
+    if (name === 'maxBedrooms' && numericValue < criteria.minBedrooms) return;
 
     const newCriteria = { ...criteria, [name]: numericValue || 1 };
     setCriteria(newCriteria);
-    updateActiveFilters(newCriteria);
   };
 
-  // Handle slider changes for price and bedrooms
   const handleSliderChange = (name) => (event, newValue) => {
     const newCriteria = {
       ...criteria,
@@ -118,38 +119,31 @@ const SearchForm = ({ onSearch, properties }) => {
       [`max${name.charAt(0).toUpperCase() + name.slice(1)}`]: newValue[1]
     };
     setCriteria(newCriteria);
-    updateActiveFilters(newCriteria);
   };
 
-  // Handle date changes for date range
   const handleDateChange = (date, field) => {
     const newCriteria = { ...criteria, [field]: date };
     setCriteria(newCriteria);
-    updateActiveFilters(newCriteria);
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     onSearch(criteria);
   };
 
-  // Handle reset of the form
+  // Updated reset handler to clear localStorage
   const handleReset = () => {
-    const defaultCriteria = {
-      type: '',
-      minPrice: 100000,
-      maxPrice: 1500000,
-      minBedrooms: 1,
-      maxBedrooms: 5,
-      dateAfter: null,
-      dateBefore: null,
-      postcode: ''
-    };
     setCriteria(defaultCriteria);
-    updateActiveFilters(defaultCriteria);
-    onSearch({});
+    localStorage.removeItem('searchCriteria');
+    onSearch(defaultCriteria);
   };
+
+  // Initial search on component mount if criteria exists
+  useEffect(() => {
+    if (criteria !== defaultCriteria) {
+      onSearch(criteria);
+    }
+  }, []);
 
   return (
     <Paper 
