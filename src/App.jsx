@@ -108,9 +108,11 @@ function App() {
 
   return (
     <LoadScript
-      googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY} // Load Google Maps API key from environment variables
-      libraries={libraries} // Load specified libraries for Google Maps
-      loadingElement={<div>Loading maps...</div>} // Loading element while maps are being loaded
+      googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+      libraries={libraries}
+      loadingElement={<div>Loading maps...</div>}
+      onError={(error) => console.error('Google Maps loading error:', error)}
+      failedElement={<div>Could not load Google Maps</div>}
     >
       <Box className="app">
         {showHeader && <Header />}

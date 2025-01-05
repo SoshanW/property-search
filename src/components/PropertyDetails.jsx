@@ -419,14 +419,7 @@ const PropertyDetails = ({ properties }) => {
                   disableDefaultUI: false,
                   zoomControl: true,
                   streetViewControl: true,
-                  scaleControl: true,
-                  styles: [
-                    {
-                      featureType: 'all',
-                      elementType: 'all',
-                      stylers: [{ saturation: -100 }] // Desaturate all features
-                    }
-                  ]
+                  scaleControl: true
                 }}
               >
                 <Marker position={mapCenter} />
