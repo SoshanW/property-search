@@ -13,9 +13,9 @@ const Header = () => {
       color="transparent" 
       elevation={0}
       sx={{
-        background: 'rgba(255, 255, 255, 0.69)',
+        background: 'rgba(255, 255, 255, 0.16)',
         backdropFilter: 'blur(8px)',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+        borderBottom: '1px solid rgba(0, 0, 0, 0)',
       }}
     >
       <Toolbar>
@@ -44,17 +44,7 @@ const Header = () => {
           >
             <HomeIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              fontWeight: 600,
-              color: 'primary.main',
-              display: { xs: 'none', sm: 'block' },
-            }}
-          >
-            Logo
-          </Typography>
+        
         </Box>
       </Toolbar>
     </AppBar>
