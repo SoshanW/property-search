@@ -1,3 +1,4 @@
+// Importing necessary react and Material-UI components
 import React, { useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -9,8 +10,11 @@ import {
   Grid,
   Divider,
   Fade,
-  Slide
+  Slide,
+  CircularProgress // Added for loading state
 } from '@mui/material';
+
+// Importing icons from Material-UI
 import { 
   ArrowBack,
   BedOutlined,
@@ -24,9 +28,11 @@ import {
   NavigateNext,
   NavigateBefore
 } from '@mui/icons-material';
-import { GoogleMap, Marker } from '@react-google-maps/api';
 
-// Enhanced Image Gallery Component
+// Importing Google Maps components
+import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
+
+// Enhanced Image Gallery Component with keyboard navigation and fullscreen mode
 const ImageGallery = ({ images }) => {
   // State for controlling current image and fullscreen mode
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -50,18 +56,18 @@ const ImageGallery = ({ images }) => {
 
   // Image navigation handlers
   const handleNext = (e) => {
-    e.stopPropagation(); // Prevent event bubbling
-    setCurrentIndex((prev) => (prev + 1) % images.length); // Move to the next image
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % images.length);
   };
 
   const handlePrev = (e) => {
     e.stopPropagation();
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length); // Move to the previous image
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
   const toggleFullscreen = (e) => {
     e.stopPropagation();
-    setIsFullscreen(!isFullscreen); // Toggle fullscreen state
+    setIsFullscreen(!isFullscreen);
   };
 
   return (
@@ -253,21 +259,56 @@ const PropertyDetails = ({ properties }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const property = properties.find(p => p.id === id);
-  const [map, setMap] = useState(null);
 
-  // Default map center (Orpington)
-  const mapCenter = {
-    lat: 51.4034,
+  // Added this new useEffect hook
+  useEffect(() => {
+    window.scrollTo(0, 0);  // Immediately jump to top without smooth scrolling
+  }, []);
+
+  
+  // State for Google Maps
+  const [map, setMap] = useState(null);
+  const [mapCenter, setMapCenter] = useState({
+    lat: 51.4034, // Default Orpington center
     lng: 0.0998
-  };
+  });
+  const [isLocationLoaded, setIsLocationLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showInfo, setShowInfo] = useState(false);
+
+  // Geocode the property location when component mounts
+  useEffect(() => {
+    if (property && window.google) {
+      const geocoder = new window.google.maps.Geocoder();
+      
+      // Geocode the address, appending 'UK' for better accuracy
+      geocoder.geocode(
+        { address: property.location + ', UK' },
+        (results, status) => {
+          if (status === 'OK' && results[0]) {
+            const { lat, lng } = results[0].geometry.location;
+            setMapCenter({
+              lat: lat(),
+              lng: lng()
+            });
+            setIsLocationLoaded(true);
+          } else {
+            console.error('Geocoding failed:', status);
+            // Keep default Orpington center if geocoding fails
+          }
+          setIsLoading(false);
+        }
+      );
+    }
+  }, [property]);
 
   // Google Maps handlers
   const onLoad = useCallback((map) => {
-    setMap(map); // Set map instance on load
+    setMap(map);
   }, []);
 
   const onUnmount = useCallback(() => {
-    setMap(null); // Clear map instance on unmount
+    setMap(null);
   }, []);
 
   // Handle case where property is not found
@@ -284,7 +325,7 @@ const PropertyDetails = ({ properties }) => {
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto', p: { xs: 2, sm: 3 } }}>
-      {/* Back Button - Now navigates to search page */}
+      {/* Back Button - Navigates to search page */}
       <IconButton
         onClick={() => navigate('/search')}
         sx={{
@@ -390,12 +431,12 @@ const PropertyDetails = ({ properties }) => {
                 '& br': { display: 'block', content: '""', mt: 2 }
               }}
             >
-              <div dangerouslySetInnerHTML={{ __html: property.description }} /> {/* Display property description */}
+              <div dangerouslySetInnerHTML={{ __html: property.description }} />
             </Typography>
 
             <Divider sx={{ my: 4 }} />
 
-            {/* Location Map */}
+            {/* Location Map Section */}
             <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
               Location
             </Typography>
@@ -406,24 +447,72 @@ const PropertyDetails = ({ properties }) => {
                 borderRadius: 2,
                 overflow: 'hidden',
                 border: '1px solid',
-                borderColor: 'divider'
+                borderColor: 'divider',
+                position: 'relative'
               }}
             >
+              {/* Loading Overlay */}
+              {isLoading && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(255,255,255,0.8)',
+                    zIndex: 1
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
+              )}
+              
+              {/* Google Map */}
               <GoogleMap
                 mapContainerStyle={{ width: '100%', height: '100%' }}
                 center={mapCenter}
-                zoom={14}
+                zoom={15}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
                 options={{
                   disableDefaultUI: false,
                   zoomControl: true,
                   streetViewControl: true,
-                  scaleControl: true
+                  scaleControl: true,
                 }}
               >
-                <Marker position={mapCenter} />
-                {/* Marker for the map center */}
+                {/* Property Marker with InfoWindow */}
+                {isLocationLoaded && (
+                  <Marker 
+                    position={mapCenter}
+                    title={property.location}
+                    animation={window.google.maps.Animation.DROP}
+                    onClick={() => setShowInfo(true)}
+                  >
+                    {showInfo && (
+                      <InfoWindow
+                        position={mapCenter}
+                        onCloseClick={() => setShowInfo(false)}
+                      >
+                        <div>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                            {property.type} - {property.bedrooms} bed
+                          </Typography>
+                          <Typography variant="body2">
+                            {property.location}
+                          </Typography>
+                          <Typography variant="body2" color="primary" sx={{ mt: 1 }}>
+                            £{property.price.toLocaleString()}
+                          </Typography>
+                        </div>
+                      </InfoWindow>
+                    )}
+                  </Marker>
+                )}
               </GoogleMap>
             </Paper>
           </Box>
